@@ -1,0 +1,61 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    {
+        name    boundaryFaces;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+            name inlet_air;
+        }
+    }
+
+    {
+        name    inletFaces;
+        type    faceSet;
+        action  new;
+        source  faceToFace;
+        sourceInfo
+        {
+            set boundaryFaces;
+        }
+    }
+
+    
+
+    {
+        name    inletFaces;
+        type    faceSet;
+        action  subset;
+        source  cylinderAnnulusToFace;
+        sourceInfo
+        {
+           p1       (0 0.000246 -1); // start point on cylinder axis
+       p2       (0 0.000246 1);   // end point on cylinder axis
+       outerRadius   0.005;
+      innerRadius 0.004;
+        }
+    }
+
+
+);
+
+// ************************************************************************* //

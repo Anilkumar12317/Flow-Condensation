@@ -1,0 +1,51 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+# Set application name
+application=`getApplication`
+
+#Firststep to prepare the mesh
+
+# All the commands will work in of220 (OpenFOAM-2.2.0 library) environment
+
+runApplication blockMesh 
+
+#Setup the initial conditions
+
+runApplication setFields
+
+#creating patch for inlet conditions
+
+# next two commands work in of41 (OpenFOAM-4.1 library) environment
+runApplication topoSetDict
+
+runApplication createPatch -overwrite
+
+#solve problem in parallel
+
+decomposePar
+
+mpirun -np 8 phaseChangeHeatFoam -parallel>>condensation.solver
+
+#refresh alpha1 
+#cp 0/alpha1.org 0/alpha1
+#cp 0/T.org 0/T
+
+# creat non-uniform internalField
+#setFields > log.setFields
+#funkySetFields -time 0 > log.funkySetFields
+
+
+
+
+
+#paraFoam -touchAll
+
+#( cd validation && ./createGraphs ) 
+
+#cd ../
+
+# ----------------------------------------------------------------- end-of-file

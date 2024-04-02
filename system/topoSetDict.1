@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  plus                                  |
+|   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      topoSetDict.1;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    	{
+        name    c0;
+        type    cellSet;
+        action  new; //new
+        source  cylinderAnnulusToCell;
+        sourceInfo
+        {
+            //source      cylinderAnnulusToCell;
+        p1          (0 0 -0.035);
+        p2          (0 0  0.03);
+        outerRadius 0.005;
+
+   
+        innerRadius 0.0035;//box (-0.05 -0.05 -0.04) (0.05 0.05 -0.02);
+        }
+    }
+);
+
+// ************************************************************************* //

@@ -1,0 +1,140 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.x                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+   version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+sq 0.00282;
+dsq 0.0039;
+negsq #calc "-$sq";
+negdsq #calc "-$dsq";
+rad 0.00446;
+
+negrad #calc "-$rad";
+
+dia #calc "($rad/1.414)";
+
+negdia #calc "-$dia";
+
+high 0.03;
+neghigh #calc "-$high";
+
+vertices
+(
+	($sq $sq $neghigh) //0
+	($negsq $sq $neghigh) //1
+	($negsq $negsq $neghigh) //2
+	($sq $negsq $neghigh) //3
+
+
+	($sq $sq  $high) //4
+	($negsq $sq $high) //5
+	($negsq $negsq $high) //6
+	($sq $negsq $high) //7
+
+	($dia $dia $neghigh) //8
+	($negdia $dia $neghigh) //9
+	($negdia $negdia $neghigh) //10
+	($dia $negdia $neghigh) //11
+
+	($dia $dia $high) //12
+	($negdia $dia $high) //13
+	($negdia $negdia $high) //14
+	($dia $negdia $high) //15
+
+	
+
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (25 25 200) simpleGrading (1 1 1) //right hand inward
+    hex (0 8 9 1 4 12 13 5) (15 25 200) simpleGrading (0.8 1 1)
+    hex (1 9 10 2 5 13 14 6) (15 25 200) simpleGrading (0.8 1 1)
+    hex (2 10 11 3 6 14 15 7) (15 25 200) simpleGrading (0.8 1 1)
+    hex (3 11 8 0 7 15 12 4) (15 25 200) simpleGrading (0.8 1 1)
+
+   
+
+);
+
+edges
+(
+	arc 0 1 (0 $dsq $neghigh)
+	arc 1 2 ($negdsq 0 $neghigh)
+	arc 2 3 (0 $negdsq $neghigh)
+	arc 3 0 ($dsq 0 $neghigh)
+	arc 4 5 (0 $dsq $high)
+	arc 5 6 ($negdsq 0 $high)
+	arc 6 7 (0 $negdsq $high)
+	arc 7 4 ($dsq 0 $high)
+
+	
+	arc 8 9 (0 $rad $neghigh)
+	arc 9 10 ($negrad 0 $neghigh)
+	arc 10 11 (0 $negrad $neghigh)
+	arc 11 8 ($rad 0 $neghigh)
+	arc 12 13 (0 $rad $high)
+	arc 13 14 ($negrad 0 $high)
+	arc 14 15 (0 $negrad $high)
+	arc 15 12 ($rad 0 $high)
+
+	
+);
+
+boundary
+(
+    outlet
+    {
+        type patch;
+        faces
+        (
+			(4 5 6 7)
+			(4 12 13 5)
+			(5 13 14 6)
+			(6 14 15 7)
+			(7 15 12 4)
+			
+        );
+    }
+	inlet_air
+    {
+        type patch;
+        faces
+        (
+			(0 3 1 2) //right hand outward
+			(0 8 11 3)
+			(1 9 8 0)
+			(2 10 9 1)
+			(3 11 10 2)
+        );
+    }
+   
+    walls
+    {
+        type wall;
+        faces
+        (
+			
+			(8 9 13 12)
+			(10 14 13 9)
+			(10 11 15 14)
+			(8 12 15 11)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+// ************************************************************************* //
